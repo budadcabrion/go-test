@@ -17,10 +17,8 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
-	Time(ctx context.Context, in *TimeRequest, opts ...grpc.CallOption) (*TimeReply, error)
-	InsertThing(ctx context.Context, in *Thing, opts ...grpc.CallOption) (*ThingId, error)
-	GetThing(ctx context.Context, in *ThingId, opts ...grpc.CallOption) (*Thing, error)
-	ListThings(ctx context.Context, in *ListThingsRequest, opts ...grpc.CallOption) (Service_ListThingsClient, error)
+	SetScore(ctx context.Context, in *PlayerScore, opts ...grpc.CallOption) (*SetScoreReply, error)
+	GetScores(ctx context.Context, in *GetScoresRequest, opts ...grpc.CallOption) (Service_GetScoresClient, error)
 }
 
 type serviceClient struct {
@@ -31,39 +29,21 @@ func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
 	return &serviceClient{cc}
 }
 
-func (c *serviceClient) Time(ctx context.Context, in *TimeRequest, opts ...grpc.CallOption) (*TimeReply, error) {
-	out := new(TimeReply)
-	err := c.cc.Invoke(ctx, "/service.Service/Time", in, out, opts...)
+func (c *serviceClient) SetScore(ctx context.Context, in *PlayerScore, opts ...grpc.CallOption) (*SetScoreReply, error) {
+	out := new(SetScoreReply)
+	err := c.cc.Invoke(ctx, "/service.Service/SetScore", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) InsertThing(ctx context.Context, in *Thing, opts ...grpc.CallOption) (*ThingId, error) {
-	out := new(ThingId)
-	err := c.cc.Invoke(ctx, "/service.Service/InsertThing", in, out, opts...)
+func (c *serviceClient) GetScores(ctx context.Context, in *GetScoresRequest, opts ...grpc.CallOption) (Service_GetScoresClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Service_serviceDesc.Streams[0], "/service.Service/GetScores", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
-}
-
-func (c *serviceClient) GetThing(ctx context.Context, in *ThingId, opts ...grpc.CallOption) (*Thing, error) {
-	out := new(Thing)
-	err := c.cc.Invoke(ctx, "/service.Service/GetThing", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) ListThings(ctx context.Context, in *ListThingsRequest, opts ...grpc.CallOption) (Service_ListThingsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_Service_serviceDesc.Streams[0], "/service.Service/ListThings", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &serviceListThingsClient{stream}
+	x := &serviceGetScoresClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -73,17 +53,17 @@ func (c *serviceClient) ListThings(ctx context.Context, in *ListThingsRequest, o
 	return x, nil
 }
 
-type Service_ListThingsClient interface {
-	Recv() (*Thing, error)
+type Service_GetScoresClient interface {
+	Recv() (*PlayerScore, error)
 	grpc.ClientStream
 }
 
-type serviceListThingsClient struct {
+type serviceGetScoresClient struct {
 	grpc.ClientStream
 }
 
-func (x *serviceListThingsClient) Recv() (*Thing, error) {
-	m := new(Thing)
+func (x *serviceGetScoresClient) Recv() (*PlayerScore, error) {
+	m := new(PlayerScore)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -94,10 +74,8 @@ func (x *serviceListThingsClient) Recv() (*Thing, error) {
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
 type ServiceServer interface {
-	Time(context.Context, *TimeRequest) (*TimeReply, error)
-	InsertThing(context.Context, *Thing) (*ThingId, error)
-	GetThing(context.Context, *ThingId) (*Thing, error)
-	ListThings(*ListThingsRequest, Service_ListThingsServer) error
+	SetScore(context.Context, *PlayerScore) (*SetScoreReply, error)
+	GetScores(*GetScoresRequest, Service_GetScoresServer) error
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -105,17 +83,11 @@ type ServiceServer interface {
 type UnimplementedServiceServer struct {
 }
 
-func (*UnimplementedServiceServer) Time(context.Context, *TimeRequest) (*TimeReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Time not implemented")
+func (*UnimplementedServiceServer) SetScore(context.Context, *PlayerScore) (*SetScoreReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetScore not implemented")
 }
-func (*UnimplementedServiceServer) InsertThing(context.Context, *Thing) (*ThingId, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method InsertThing not implemented")
-}
-func (*UnimplementedServiceServer) GetThing(context.Context, *ThingId) (*Thing, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetThing not implemented")
-}
-func (*UnimplementedServiceServer) ListThings(*ListThingsRequest, Service_ListThingsServer) error {
-	return status.Errorf(codes.Unimplemented, "method ListThings not implemented")
+func (*UnimplementedServiceServer) GetScores(*GetScoresRequest, Service_GetScoresServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetScores not implemented")
 }
 func (*UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -123,78 +95,42 @@ func RegisterServiceServer(s *grpc.Server, srv ServiceServer) {
 	s.RegisterService(&_Service_serviceDesc, srv)
 }
 
-func _Service_Time_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TimeRequest)
+func _Service_SetScore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PlayerScore)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).Time(ctx, in)
+		return srv.(ServiceServer).SetScore(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/service.Service/Time",
+		FullMethod: "/service.Service/SetScore",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).Time(ctx, req.(*TimeRequest))
+		return srv.(ServiceServer).SetScore(ctx, req.(*PlayerScore))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_InsertThing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Thing)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).InsertThing(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/service.Service/InsertThing",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).InsertThing(ctx, req.(*Thing))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_GetThing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ThingId)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).GetThing(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/service.Service/GetThing",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).GetThing(ctx, req.(*ThingId))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_ListThings_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ListThingsRequest)
+func _Service_GetScores_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetScoresRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ServiceServer).ListThings(m, &serviceListThingsServer{stream})
+	return srv.(ServiceServer).GetScores(m, &serviceGetScoresServer{stream})
 }
 
-type Service_ListThingsServer interface {
-	Send(*Thing) error
+type Service_GetScoresServer interface {
+	Send(*PlayerScore) error
 	grpc.ServerStream
 }
 
-type serviceListThingsServer struct {
+type serviceGetScoresServer struct {
 	grpc.ServerStream
 }
 
-func (x *serviceListThingsServer) Send(m *Thing) error {
+func (x *serviceGetScoresServer) Send(m *PlayerScore) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -203,22 +139,14 @@ var _Service_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*ServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Time",
-			Handler:    _Service_Time_Handler,
-		},
-		{
-			MethodName: "InsertThing",
-			Handler:    _Service_InsertThing_Handler,
-		},
-		{
-			MethodName: "GetThing",
-			Handler:    _Service_GetThing_Handler,
+			MethodName: "SetScore",
+			Handler:    _Service_SetScore_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "ListThings",
-			Handler:       _Service_ListThings_Handler,
+			StreamName:    "GetScores",
+			Handler:       _Service_GetScores_Handler,
 			ServerStreams: true,
 		},
 	},

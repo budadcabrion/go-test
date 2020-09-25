@@ -25,14 +25,17 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
-type TimeRequest struct {
+type PlayerScore struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	Name  string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Score int64  `protobuf:"varint,2,opt,name=score,proto3" json:"score,omitempty"`
 }
 
-func (x *TimeRequest) Reset() {
-	*x = TimeRequest{}
+func (x *PlayerScore) Reset() {
+	*x = PlayerScore{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_service_service_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -40,13 +43,13 @@ func (x *TimeRequest) Reset() {
 	}
 }
 
-func (x *TimeRequest) String() string {
+func (x *PlayerScore) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TimeRequest) ProtoMessage() {}
+func (*PlayerScore) ProtoMessage() {}
 
-func (x *TimeRequest) ProtoReflect() protoreflect.Message {
+func (x *PlayerScore) ProtoReflect() protoreflect.Message {
 	mi := &file_service_service_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -58,21 +61,33 @@ func (x *TimeRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TimeRequest.ProtoReflect.Descriptor instead.
-func (*TimeRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use PlayerScore.ProtoReflect.Descriptor instead.
+func (*PlayerScore) Descriptor() ([]byte, []int) {
 	return file_service_service_proto_rawDescGZIP(), []int{0}
 }
 
-type TimeReply struct {
+func (x *PlayerScore) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *PlayerScore) GetScore() int64 {
+	if x != nil {
+		return x.Score
+	}
+	return 0
+}
+
+type SetScoreReply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
-
-	Timestamp int64 `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 }
 
-func (x *TimeReply) Reset() {
-	*x = TimeReply{}
+func (x *SetScoreReply) Reset() {
+	*x = SetScoreReply{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_service_service_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -80,13 +95,13 @@ func (x *TimeReply) Reset() {
 	}
 }
 
-func (x *TimeReply) String() string {
+func (x *SetScoreReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TimeReply) ProtoMessage() {}
+func (*SetScoreReply) ProtoMessage() {}
 
-func (x *TimeReply) ProtoReflect() protoreflect.Message {
+func (x *SetScoreReply) ProtoReflect() protoreflect.Message {
 	mi := &file_service_service_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -98,30 +113,22 @@ func (x *TimeReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TimeReply.ProtoReflect.Descriptor instead.
-func (*TimeReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use SetScoreReply.ProtoReflect.Descriptor instead.
+func (*SetScoreReply) Descriptor() ([]byte, []int) {
 	return file_service_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *TimeReply) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
-	}
-	return 0
-}
-
-type Thing struct {
+type GetScoresRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id   int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Type string `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
+	Start int64 `protobuf:"varint,1,opt,name=start,proto3" json:"start,omitempty"`
+	Count int64 `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
 }
 
-func (x *Thing) Reset() {
-	*x = Thing{}
+func (x *GetScoresRequest) Reset() {
+	*x = GetScoresRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_service_service_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -129,13 +136,13 @@ func (x *Thing) Reset() {
 	}
 }
 
-func (x *Thing) String() string {
+func (x *GetScoresRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Thing) ProtoMessage() {}
+func (*GetScoresRequest) ProtoMessage() {}
 
-func (x *Thing) ProtoReflect() protoreflect.Message {
+func (x *GetScoresRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_service_service_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -147,115 +154,23 @@ func (x *Thing) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Thing.ProtoReflect.Descriptor instead.
-func (*Thing) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetScoresRequest.ProtoReflect.Descriptor instead.
+func (*GetScoresRequest) Descriptor() ([]byte, []int) {
 	return file_service_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *Thing) GetId() int64 {
+func (x *GetScoresRequest) GetStart() int64 {
 	if x != nil {
-		return x.Id
+		return x.Start
 	}
 	return 0
 }
 
-func (x *Thing) GetName() string {
+func (x *GetScoresRequest) GetCount() int64 {
 	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Thing) GetType() string {
-	if x != nil {
-		return x.Type
-	}
-	return ""
-}
-
-type ThingId struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-}
-
-func (x *ThingId) Reset() {
-	*x = ThingId{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_service_service_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *ThingId) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ThingId) ProtoMessage() {}
-
-func (x *ThingId) ProtoReflect() protoreflect.Message {
-	mi := &file_service_service_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ThingId.ProtoReflect.Descriptor instead.
-func (*ThingId) Descriptor() ([]byte, []int) {
-	return file_service_service_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *ThingId) GetId() int64 {
-	if x != nil {
-		return x.Id
+		return x.Count
 	}
 	return 0
-}
-
-type ListThingsRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *ListThingsRequest) Reset() {
-	*x = ListThingsRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_service_service_proto_msgTypes[4]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *ListThingsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListThingsRequest) ProtoMessage() {}
-
-func (x *ListThingsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_service_service_proto_msgTypes[4]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListThingsRequest.ProtoReflect.Descriptor instead.
-func (*ListThingsRequest) Descriptor() ([]byte, []int) {
-	return file_service_service_proto_rawDescGZIP(), []int{4}
 }
 
 var File_service_service_proto protoreflect.FileDescriptor
@@ -263,35 +178,28 @@ var File_service_service_proto protoreflect.FileDescriptor
 var file_service_service_proto_rawDesc = []byte{
 	0x0a, 0x15, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
 	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x07, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
-	0x22, 0x0d, 0x0a, 0x0b, 0x54, 0x69, 0x6d, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22,
-	0x29, 0x0a, 0x09, 0x54, 0x69, 0x6d, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x1c, 0x0a, 0x09,
-	0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52,
-	0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x22, 0x3f, 0x0a, 0x05, 0x54, 0x68,
-	0x69, 0x6e, 0x67, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52,
-	0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x22, 0x19, 0x0a, 0x07, 0x54,
-	0x68, 0x69, 0x6e, 0x67, 0x49, 0x64, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x22, 0x13, 0x0a, 0x11, 0x4c, 0x69, 0x73, 0x74, 0x54, 0x68,
-	0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x32, 0xde, 0x01, 0x0a, 0x07,
-	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x32, 0x0a, 0x04, 0x54, 0x69, 0x6d, 0x65, 0x12,
-	0x14, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x12, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
-	0x54, 0x69, 0x6d, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x00, 0x12, 0x31, 0x0a, 0x0b, 0x49,
-	0x6e, 0x73, 0x65, 0x72, 0x74, 0x54, 0x68, 0x69, 0x6e, 0x67, 0x12, 0x0e, 0x2e, 0x73, 0x65, 0x72,
-	0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x68, 0x69, 0x6e, 0x67, 0x1a, 0x10, 0x2e, 0x73, 0x65, 0x72,
-	0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x68, 0x69, 0x6e, 0x67, 0x49, 0x64, 0x22, 0x00, 0x12, 0x2e,
-	0x0a, 0x08, 0x47, 0x65, 0x74, 0x54, 0x68, 0x69, 0x6e, 0x67, 0x12, 0x10, 0x2e, 0x73, 0x65, 0x72,
-	0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x68, 0x69, 0x6e, 0x67, 0x49, 0x64, 0x1a, 0x0e, 0x2e, 0x73,
-	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x68, 0x69, 0x6e, 0x67, 0x22, 0x00, 0x12, 0x3c,
-	0x0a, 0x0a, 0x4c, 0x69, 0x73, 0x74, 0x54, 0x68, 0x69, 0x6e, 0x67, 0x73, 0x12, 0x1a, 0x2e, 0x73,
-	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x54, 0x68, 0x69, 0x6e, 0x67,
-	0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0e, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69,
-	0x63, 0x65, 0x2e, 0x54, 0x68, 0x69, 0x6e, 0x67, 0x22, 0x00, 0x30, 0x01, 0x42, 0x2d, 0x5a, 0x2b,
-	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x62, 0x75, 0x64, 0x61, 0x64,
-	0x63, 0x61, 0x62, 0x72, 0x69, 0x6f, 0x6e, 0x2f, 0x67, 0x6f, 0x2d, 0x70, 0x72, 0x61, 0x63, 0x74,
-	0x69, 0x63, 0x65, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x22, 0x37, 0x0a, 0x0b, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x53, 0x63, 0x6f, 0x72, 0x65, 0x12,
+	0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e,
+	0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x22, 0x0f, 0x0a, 0x0d, 0x53, 0x65, 0x74,
+	0x53, 0x63, 0x6f, 0x72, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x3e, 0x0a, 0x10, 0x47, 0x65,
+	0x74, 0x53, 0x63, 0x6f, 0x72, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14,
+	0x0a, 0x05, 0x73, 0x74, 0x61, 0x72, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x73,
+	0x74, 0x61, 0x72, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x32, 0x87, 0x01, 0x0a, 0x07, 0x53,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3a, 0x0a, 0x08, 0x53, 0x65, 0x74, 0x53, 0x63, 0x6f,
+	0x72, 0x65, 0x12, 0x14, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x50, 0x6c, 0x61,
+	0x79, 0x65, 0x72, 0x53, 0x63, 0x6f, 0x72, 0x65, 0x1a, 0x16, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69,
+	0x63, 0x65, 0x2e, 0x53, 0x65, 0x74, 0x53, 0x63, 0x6f, 0x72, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x22, 0x00, 0x12, 0x40, 0x0a, 0x09, 0x47, 0x65, 0x74, 0x53, 0x63, 0x6f, 0x72, 0x65, 0x73, 0x12,
+	0x19, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x63, 0x6f,
+	0x72, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x73, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x53, 0x63, 0x6f, 0x72, 0x65,
+	0x22, 0x00, 0x30, 0x01, 0x42, 0x36, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
+	0x6f, 0x6d, 0x2f, 0x62, 0x75, 0x64, 0x61, 0x64, 0x63, 0x61, 0x62, 0x72, 0x69, 0x6f, 0x6e, 0x2f,
+	0x67, 0x6f, 0x2d, 0x74, 0x65, 0x73, 0x74, 0x2f, 0x6c, 0x65, 0x61, 0x64, 0x65, 0x72, 0x62, 0x6f,
+	0x61, 0x72, 0x64, 0x32, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -306,25 +214,19 @@ func file_service_service_proto_rawDescGZIP() []byte {
 	return file_service_service_proto_rawDescData
 }
 
-var file_service_service_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_service_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_service_service_proto_goTypes = []interface{}{
-	(*TimeRequest)(nil),       // 0: service.TimeRequest
-	(*TimeReply)(nil),         // 1: service.TimeReply
-	(*Thing)(nil),             // 2: service.Thing
-	(*ThingId)(nil),           // 3: service.ThingId
-	(*ListThingsRequest)(nil), // 4: service.ListThingsRequest
+	(*PlayerScore)(nil),      // 0: service.PlayerScore
+	(*SetScoreReply)(nil),    // 1: service.SetScoreReply
+	(*GetScoresRequest)(nil), // 2: service.GetScoresRequest
 }
 var file_service_service_proto_depIdxs = []int32{
-	0, // 0: service.Service.Time:input_type -> service.TimeRequest
-	2, // 1: service.Service.InsertThing:input_type -> service.Thing
-	3, // 2: service.Service.GetThing:input_type -> service.ThingId
-	4, // 3: service.Service.ListThings:input_type -> service.ListThingsRequest
-	1, // 4: service.Service.Time:output_type -> service.TimeReply
-	3, // 5: service.Service.InsertThing:output_type -> service.ThingId
-	2, // 6: service.Service.GetThing:output_type -> service.Thing
-	2, // 7: service.Service.ListThings:output_type -> service.Thing
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	0, // 0: service.Service.SetScore:input_type -> service.PlayerScore
+	2, // 1: service.Service.GetScores:input_type -> service.GetScoresRequest
+	1, // 2: service.Service.SetScore:output_type -> service.SetScoreReply
+	0, // 3: service.Service.GetScores:output_type -> service.PlayerScore
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -337,7 +239,7 @@ func file_service_service_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_service_service_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TimeRequest); i {
+			switch v := v.(*PlayerScore); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -349,7 +251,7 @@ func file_service_service_proto_init() {
 			}
 		}
 		file_service_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TimeReply); i {
+			switch v := v.(*SetScoreReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -361,31 +263,7 @@ func file_service_service_proto_init() {
 			}
 		}
 		file_service_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Thing); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_service_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ThingId); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_service_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListThingsRequest); i {
+			switch v := v.(*GetScoresRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -403,7 +281,7 @@ func file_service_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_service_service_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
