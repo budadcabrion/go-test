@@ -8,14 +8,14 @@ import (
 	"strconv"
 	"io"
 
-	"github.com/budadcabrion/go-practice/service"
+	"github.com/budadcabrion/go-test/leaderboard2/service"
 
 	"google.golang.org/grpc"
 )
 
 const (
 	address = "localhost:12345"
-	defaultCmd = "time"
+	defaultCmd = ""
 )
 
 func main() {
@@ -38,52 +38,38 @@ func main() {
 	defer cancel()
 
 	switch cmd {
-	case "time":
-		r, err := client.Time(ctx, &service.TimeRequest{})
-		if err != nil {
-			log.Fatalf("could not get time: %v", err)
-		}
-		t := time.Unix(r.Timestamp, 0)
-		log.Printf("Time: %d, %s", r.Timestamp, t.String())
-
-	case "insert":
+	case "setscore":
 		if len(os.Args) < 4 {
-			log.Fatalf("not enough args for insert, need 2")
+			log.Fatalf("not enough args for setscore, need 2")
 		}
 		name := os.Args[2]
-		thingType := os.Args[3]
-		r, err := client.InsertThing(ctx, &service.Thing{Name: name, Type: thingType})
+		score, _ := strconv.ParseInt(os.Args[3], 10, 64)
+		_, err := client.SetScore(ctx, &service.PlayerScore{Name: name, Score: score})
 		if err != nil {
-			log.Fatalf("could not insert thing: %v", err)
+			log.Fatalf("could not set score: %v", err)
 		}
-		log.Printf("Id: %d", r.Id)
+		log.Printf("confirmed %v = %d", name, score)
 
-	case "get":
-		if len(os.Args) < 3 {
-			log.Fatalf("not enough args for insert, need 2")
+	case "getscores":
+		if len(os.Args) < 4 {
+			log.Fatalf("not enough args for setscore, need 2")
 		}
-		id, _ := strconv.Atoi(os.Args[2])
-		r, err := client.GetThing(ctx, &service.ThingId{Id: int64(id)})
+		start, _ := strconv.ParseInt(os.Args[2], 10, 64)
+		count, _ := strconv.ParseInt(os.Args[3], 10, 64)
+		stream, err := client.GetScores(ctx, &service.GetScoresRequest{Start: start, Count: count})
 		if err != nil {
-			log.Fatalf("could not get thing: %v", err)
-		}
-		log.Printf("Thing: %v", r)
-
-	case "list":
-		stream, err := client.ListThings(ctx, &service.ListThingsRequest{})
-		if err != nil {
-			log.Fatalf("could not list things: %v", err)
+			log.Fatalf("could not get scores: %v", err)
 		}
 
 		for {
-			thing, err := stream.Recv()
+			playerScore, err := stream.Recv()
 			if err == io.EOF {
 				break
 			}
 			if err != nil {
-				log.Fatalf("could not recv thing: %v", err)
+				log.Fatalf("could not recv playerscore: %v", err)
 			}
-			log.Printf("Thing: %v", thing)
+			log.Printf("PlayerScore: %v", playerScore)
 		}
 
 	default:

@@ -4,9 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
-	"time"
 
-	
 	db "github.com/budadcabrion/go-test/leaderboard2/db"
 	"github.com/budadcabrion/go-test/leaderboard2/service"
 
@@ -31,8 +29,8 @@ func (s *serviceServer) GetScores(req *service.GetScoresRequest, stream service.
 	log.Printf("GetScores %v %v", req.Start, req.Count)
 	scores := db.GetScores(req.Start, req.Count)
 
-	for _, thing := range scores {
-		stream.Send(&service.PlayerScore{Id: thing.Id, Name: thing.Name, Type: thing.Type})
+	for _, s := range scores {
+		stream.Send(&service.PlayerScore{Name: s.Name, Score: s.Score})
 	}
 	return nil
 }
@@ -51,6 +49,4 @@ func main() {
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to start grpc: %v", err)
 	}
-
-
 }
