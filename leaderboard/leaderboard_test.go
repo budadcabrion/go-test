@@ -28,7 +28,7 @@ func TestLeaderboardSorting(t *testing.T) {
 			t.Errorf("not actually sorted %d %d %d", i, l.sortedScores[i].Score, l.sortedScores[i+1].Score)
 		}
 		if l.sortedScores[i].Score == l.sortedScores[i+1].Score {
-			if l.sortedScores[i].Name > l.sortedScores[i+1].Name {
+			if l.sortedScores[i].Name < l.sortedScores[i+1].Name {
 				t.Errorf("ties should sort by name ascending %d %v %v", i, l.sortedScores[i].Name, l.sortedScores[i+1].Name)
 			}
 		}

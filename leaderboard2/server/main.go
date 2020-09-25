@@ -7,8 +7,8 @@ import (
 	"time"
 
 	
-	db "github.com/budadcabrion/go-practice/db"
-	"github.com/budadcabrion/go-practice/service"
+	db "github.com/budadcabrion/go-test/leaderboard2/db"
+	"github.com/budadcabrion/go-test/leaderboard2/service"
 
 	"google.golang.org/grpc"
 )
@@ -21,30 +21,18 @@ type serviceServer struct {
 	service.UnimplementedServiceServer
 }
 
-func (s *serviceServer) Time(ctx context.Context, in *service.TimeRequest) (*service.TimeReply, error) {
-	log.Printf("Time")
-	now := time.Now().Unix()
-	return &service.TimeReply{Timestamp: now}, nil
+func (s *serviceServer) SetScore(ctx context.Context, in *service.PlayerScore) (*service.SetScoreReply, error) {
+	log.Printf("SetScore %v = %v", in.Name, in.Score)
+	db.SetScore(in.Name, in.Score)
+	return &service.SetScoreReply{}, nil
 }
 
-func (s *serviceServer) InsertThing(ctx context.Context, thing *service.Thing) (*service.ThingId, error) {
-	log.Printf("InsertThing")
-	id := db.InsertThing(db.Thing{thing.Id, thing.Name, thing.Type})
-	return &service.ThingId{Id: id}, nil
-}
+func (s *serviceServer) GetScores(req *service.GetScoresRequest, stream service.Service_GetScoresServer) error {
+	log.Printf("GetScores %v %v", req.Start, req.Count)
+	scores := db.GetScores(req.Start, req.Count)
 
-func (s *serviceServer) GetThing(ctx context.Context, thingId *service.ThingId) (*service.Thing, error) {
-	log.Printf("GetThing")
-	thing, err := db.GetThing(thingId.Id)
-	return &service.Thing{Id: thing.Id, Name: thing.Name, Type: thing.Type}, err
-}
-
-func (s *serviceServer) ListThings(req *service.ListThingsRequest, stream service.Service_ListThingsServer) error {
-	log.Printf("ListThings")
-	things := db.ListThings()
-
-	for _, thing := range things {
-		stream.Send(&service.Thing{Id: thing.Id, Name: thing.Name, Type: thing.Type})
+	for _, thing := range scores {
+		stream.Send(&service.PlayerScore{Id: thing.Id, Name: thing.Name, Type: thing.Type})
 	}
 	return nil
 }

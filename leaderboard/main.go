@@ -4,7 +4,7 @@ import "fmt"
 import "net/http"
 import "strconv"
 
-var l *Leaderboard
+var leaderboard *Leaderboard
 
 func setScore(w http.ResponseWriter, req *http.Request) {
 	name := req.FormValue("name")
@@ -18,7 +18,7 @@ func setScore(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "score must be present and an integer", 503)
 		return
 	}
-	l.SetScore(name, score)
+	leaderboard.SetScore(name, score)
 	fmt.Fprintf(w, "confirmed %v = %d\n", name, score)
 }
 
@@ -37,7 +37,7 @@ func getScores(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	scores := l.GetScores(int(start), int(count))
+	scores := leaderboard.GetScores(int(start), int(count))
 
 	for _, s := range scores {
 		fmt.Fprintf(w,"%v %d\n", s.Name, s.Score)
@@ -45,7 +45,7 @@ func getScores(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	l = MakeLeaderboard()
+	leaderboard = MakeLeaderboard()
 
 	http.HandleFunc("/setscore", setScore)
 	http.HandleFunc("/getscores", getScores)

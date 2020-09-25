@@ -29,10 +29,10 @@ func InitDB(name string, delete bool) {
 
 type PlayerScore struct {
 	Name string
-	Score int
+	Score int64
 }
 
-func SetScore(name string, score int) {
+func SetScore(name string, score int64) {
 	statement, err := db.Prepare("INSERT INTO playerscore (name, score) VALUES (?, ?) ON CONFLICT(name) DO UPDATE SET score = ?")
 	if err != nil {
 		log.Fatalf("SetScore db.Prepare: %v", err)
@@ -47,7 +47,7 @@ func SetScore(name string, score int) {
 	}
 }
 
-func GetScores(start int,  count int) (ts []PlayerScore) {
+func GetScores(start int64,  count int64) (ts []PlayerScore) {
  	rows, err := db.Query("SELECT name, score FROM playerscore ORDER BY score DESC, name ASC LIMIT ?, ?", start, count)
  	defer rows.Close()
 	if err != nil {

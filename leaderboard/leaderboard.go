@@ -40,7 +40,7 @@ func (l* Leaderboard) updateSortedScores() {
 	}
 	sort.Slice(s, func(i, j int) bool {
 		if s[i].Score == s[j].Score {
-			return s[i].Name > s[i].Name
+			return s[i].Name > s[j].Name
 		}
 		return s[i].Score > s[j].Score
 	})
