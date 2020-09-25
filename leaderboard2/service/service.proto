@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option go_package = "github.com/budadcabrion/go-practice/service";
+
+package service;
+
+service Service {
+	rpc Time (TimeRequest) returns (TimeReply) {}
+
+	rpc InsertThing (Thing) returns (ThingId) {}
+
+	rpc GetThing (ThingId) returns (Thing) {}
+
+	rpc ListThings (ListThingsRequest) returns (stream Thing) {}
+}
+
+message TimeRequest {
+}
+
+message TimeReply {
+	int64 timestamp = 1; 
+}
+
+message Thing {
+	int64 id = 1;
+	string name = 2;
+	string type = 3;
+}
+
+message ThingId {
+	int64 id = 1;
+}
+
+message ListThingsRequest {
+}

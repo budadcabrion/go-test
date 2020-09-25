@@ -1,1 +1,4 @@
 .idea
+*.db
+.DS_Store
+go.sum
