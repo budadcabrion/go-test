@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 	"os"
@@ -48,7 +49,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("could not set score: %v", err)
 		}
-		log.Printf("confirmed %v = %d", name, score)
+		fmt.Printf("confirmed %v = %d\n", name, score)
 
 	case "getscores":
 		if len(os.Args) < 4 {
@@ -69,7 +70,7 @@ func main() {
 			if err != nil {
 				log.Fatalf("could not recv playerscore: %v", err)
 			}
-			log.Printf("PlayerScore: %v", playerScore)
+			fmt.Println(playerScore)
 		}
 
 	default:
